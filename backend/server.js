@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
   socket.emit('initial_transactions', transactionService.getProcessedTransactions());
 });
 
-const PORT = 3001;
-server.listen(PORT, () => {
-  console.log(`Backend server running on http://localhost:${PORT}`);
+const PORT = process.env.PORT || 3001;
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Backend server running on port ${PORT}`);
 });

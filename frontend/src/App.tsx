@@ -8,7 +8,8 @@ import { GraphVisualization } from "./pages/GraphVisualization"
 import { FraudMonitor } from "./pages/FraudMonitor"
 import { useStore } from "./store/useStore"
 
-const socket = io("http://localhost:3001")
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001"
+const socket = io(API_URL)
 
 function App() {
   const { setUsers, setGraphData, setTransactions, addTransaction, addFraudAlert } = useStore()

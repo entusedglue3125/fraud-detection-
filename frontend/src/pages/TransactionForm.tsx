@@ -18,7 +18,7 @@ export function TransactionForm() {
     
     setLoading(true)
     try {
-      await fetch("http://localhost:3001/api/transactions", {
+      await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3001"}/api/transactions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ senderId, receiverId, amount })

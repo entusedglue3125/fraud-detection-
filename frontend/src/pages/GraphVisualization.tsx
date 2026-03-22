@@ -15,7 +15,7 @@ export function GraphVisualization() {
   const handleFindPath = async () => {
     if (!startNode || !endNode) return
     try {
-      const res = await fetch(`http://localhost:3001/api/path/${startNode}/${endNode}`)
+      const res = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3001"}/api/path/${startNode}/${endNode}`)
       const data = await res.json()
       setShortestPath(data.path || [])
       setPathDistance(data.distance)
