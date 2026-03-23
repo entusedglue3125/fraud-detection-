@@ -6,7 +6,7 @@ import { Input } from "../components/ui/Input"
 import { Badge } from "../components/ui/Badge"
 
 export function TransactionForm() {
-  const { users, transactions } = useStore()
+  const { users, transactions, processTransaction } = useStore()
   const [senderId, setSenderId] = useState("")
   const [receiverId, setReceiverId] = useState("")
   const [amount, setAmount] = useState("")
@@ -18,11 +18,17 @@ export function TransactionForm() {
     
     setLoading(true)
     try {
-      await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3001"}/api/transactions`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ senderId, receiverId, amount })
-      })
+      // Use client-side engine if no backend URL is configured
+      const apiUrl = import.meta.env.VITE_API_URL
+      if (apiUrl) {
+        await fetch(`${apiUrl}/api/transactions`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ senderId, receiverId, amount })
+        })
+      } else {
+        processTransaction(senderId, receiverId, Number(amount))
+      }
       setAmount("")
     } catch (err) {
       console.error(err)

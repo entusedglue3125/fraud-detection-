@@ -3,6 +3,7 @@ import ForceGraph2D from "react-force-graph-2d"
 import { useStore } from "../store/useStore"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/Card"
 import { Button } from "../components/ui/Button"
+import { engine } from "../lib/transactionEngine"
 
 export function GraphVisualization() {
   const { graphData, users } = useStore()
@@ -15,12 +16,23 @@ export function GraphVisualization() {
   const handleFindPath = async () => {
     if (!startNode || !endNode) return
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3001"}/api/path/${startNode}/${endNode}`)
-      const data = await res.json()
-      setShortestPath(data.path || [])
-      setPathDistance(data.distance)
+      // Try backend first, fallback to client-side engine
+      const apiUrl = import.meta.env.VITE_API_URL
+      if (apiUrl) {
+        const res = await fetch(`${apiUrl}/api/path/${startNode}/${endNode}`)
+        const data = await res.json()
+        setShortestPath(data.path || [])
+        setPathDistance(data.distance)
+      } else {
+        const result = engine.getShortestPath(startNode, endNode)
+        setShortestPath(result.path || [])
+        setPathDistance(result.distance)
+      }
     } catch (err) {
-      console.error(err)
+      // Fallback to client-side
+      const result = engine.getShortestPath(startNode, endNode)
+      setShortestPath(result.path || [])
+      setPathDistance(result.distance)
     }
   }
 
