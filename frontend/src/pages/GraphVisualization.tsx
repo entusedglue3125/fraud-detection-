@@ -10,7 +10,7 @@ export function GraphVisualization() {
   const [endNode, setEndNode] = useState("")
   const [shortestPath, setShortestPath] = useState<string[]>([])
   const [pathDistance, setPathDistance] = useState<number | null>(null)
-  const fgRef = useRef<any>()
+  const fgRef = useRef<any>(null)
 
   const handleFindPath = async () => {
     if (!startNode || !endNode) return
@@ -172,6 +172,7 @@ export function GraphVisualization() {
             linkWidth="width"
             linkDirectionalArrowLength={4}
             linkDirectionalArrowRelPos={1}
+            // @ts-ignore - d3Force is a valid prop but missing from type definitions
             d3Force="charge"
             cooldownTicks={100}
             onEngineStop={() => fgRef.current?.zoomToFit(400, 50)}
